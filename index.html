@@ -407,6 +407,7 @@
             border-radius: 15px;
             padding: 20px;
             border: 2px solid rgba(255, 215, 0, 0.2);
+            height: 500px
         }
         
         .ingredients-title {
@@ -727,11 +728,12 @@
                             
                             <!-- Cauldron Area -->
                             <div class="cauldron-area">
-                                <div class="cauldron" id="cauldron">
-                                    <div class="cauldron-liquid" id="cauldron-liquid"></div>
-                                </div>
-                                <button class="brew-button" id="brew-button">🔥 Brew Potion</button>
-                                <div id="current-formula" style="font-size: 14px; opacity: 0.8; text-align: center;"></div>
+                <div class="cauldron" id="cauldron">
+                    <div class="cauldron-liquid" id="cauldron-liquid"></div>
+                </div>
+                <div id="current-formula" style="font-size: 14px; opacity: 0.8; text-align: center;"></div>
+                <button class="brew-button" id="brew-button">🔥 Brew Potion</button>
+                <button class="reset-button" id="reset-button" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); color: white; border: none; padding: 18px 40px; border-radius: 20px; font-family: 'Cinzel', serif; font-size: 15px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3); display: block; margin: 20px auto 0 auto; letter-spacing: 1px;">🗑️ CLEAR CAULDRON</button>
                             </div>
                             
                             <!-- Ingredients Panel -->
@@ -740,6 +742,39 @@
                                 <div class="ingredients-grid" id="ingredients-grid">
                                     <!-- Ingredients will be generated dynamically -->
                                 </div>
+                                <div class="ai-guide" id="ai-guide">
+                                    <div class="guide-header">
+                                        <div class="guide-avatar">🦉</div>
+                                        <div class="guide-name">Athena, Your Guide</div>
+                                    </div>
+                                    <div class="guide-message" id="guide-message">
+                                        Welcome, young alchemist! I'll help guide you through the mysteries of chemistry. Start by dragging ingredients into your cauldron to create the perfect solution!
+                                    </div>
+                                </div>
+
+                                <div class="modal" id="success-modal">
+                                    <div class="modal-content">
+                                        <div class="modal-icon" style="color: #4ade80;">✨</div>
+                                        <div class="modal-title" style="color: #4ade80;">Excellent Work!</div>
+                                        <div class="modal-message" id="success-message">
+                                            You've successfully created the perfect potion! The knight's armor gleams like new.
+                                        </div>
+                                        <button class="modal-button" onclick="closeModal('success-modal')">Continue Adventure</button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Failure Modal -->
+                                <div class="modal" id="failure-modal">
+                                    <div class="modal-content">
+                                        <div class="modal-icon" style="color: #ef4444;">💥</div>
+                                        <div class="modal-title" style="color: #ef4444;">Oops! Try Again</div>
+                                        <div class="modal-message" id="failure-message">
+                                            That combination didn't work as expected. Don't worry - every great alchemist learns from their mistakes!
+                                        </div>
+                                        <button class="modal-button" onclick="closeModal('failure-modal')">Try Again</button>
+                                    </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
@@ -748,40 +783,9 @@
         </div>
         
         <!-- AI Guide -->
-        <div class="ai-guide" id="ai-guide">
-            <div class="guide-header">
-                <div class="guide-avatar">🦉</div>
-                <div class="guide-name">Athena, Your Guide</div>
-            </div>
-            <div class="guide-message" id="guide-message">
-                Welcome, young alchemist! I'll help guide you through the mysteries of chemistry. Start by dragging ingredients into your cauldron to create the perfect solution!
-            </div>
-        </div>
         
         <!-- Success Modal -->
-        <div class="modal" id="success-modal">
-            <div class="modal-content">
-                <div class="modal-icon" style="color: #4ade80;">✨</div>
-                <div class="modal-title" style="color: #4ade80;">Excellent Work!</div>
-                <div class="modal-message" id="success-message">
-                    You've successfully created the perfect potion! The knight's armor gleams like new.
-                </div>
-                <button class="modal-button" onclick="closeModal('success-modal')">Continue Adventure</button>
-            </div>
-        </div>
-        
-        <!-- Failure Modal -->
-        <div class="modal" id="failure-modal">
-            <div class="modal-content">
-                <div class="modal-icon" style="color: #ef4444;">💥</div>
-                <div class="modal-title" style="color: #ef4444;">Oops! Try Again</div>
-                <div class="modal-message" id="failure-message">
-                    That combination didn't work as expected. Don't worry - every great alchemist learns from their mistakes!
-                </div>
-                <button class="modal-button" onclick="closeModal('failure-modal')">Try Again</button>
-            </div>
-        </div>
-    </div>
+
 
     <script>
         // Game State
@@ -1198,156 +1202,7 @@
             }, 600);
         }
         
-        // Enhanced AI Guide system with agentic behavior
-        class AgenticAIGuide {
-            constructor() {
-                this.knowledge = {
-                    reactions: {
-                        'Fe₂O₃ + HCl': {
-                            type: 'acid-base',
-                            explanation: 'Iron oxide (rust) reacts with hydrochloric acid to form iron chloride and water',
-                            realWorld: 'This is how rust removers work on metal surfaces',
-                            balancing: 'You need 6 HCl molecules for every 1 Fe₂O₃ molecule'
-                        },
-                        'HCl + NaOH': {
-                            type: 'neutralization',
-                            explanation: 'Strong acid meets strong base to form salt and water',
-                            realWorld: 'This neutralizes acidic spills or basic solutions',
-                            balancing: 'Perfect 1:1 ratio - one acid molecule neutralizes one base molecule'
-                        }
-                    },
-                    misconceptions: [
-                        { pattern: 'too_much_acid', message: 'Too much acid can be dangerous! Chemistry is about perfect balance.' },
-                        { pattern: 'missing_catalyst', message: 'Some reactions need a catalyst to speed up. Think about what helps reactions happen faster.' },
-                        { pattern: 'wrong_order', message: 'Order of addition matters in chemistry! Some reactions are sensitive to sequence.' }
-                    ]
-                };
-                this.conversationHistory = [];
-                this.studentProfile = {
-                    strengths: [],
-                    weaknesses: [],
-                    learningStyle: 'visual', // visual, analytical, hands-on
-                    mistakePatterns: []
-                };
-            }
-
-            analyzeStudentAttempt(userContents, correctSolution, attemptNumber) {
-                const analysis = {
-                    correctIngredients: [],
-                    missingIngredients: [],
-                    extraIngredients: [],
-                    ratioErrors: [],
-                    conceptualErrors: []
-                };
-
-                // Analyze ingredient presence
-                const correctCount = {};
-                const userCount = {};
-                
-                correctSolution.forEach(ing => correctCount[ing] = (correctCount[ing] || 0) + 1);
-                userContents.forEach(ing => userCount[ing] = (userCount[ing] || 0) + 1);
-
-                // Check ratios and missing/extra ingredients
-                Object.keys(correctCount).forEach(ingredient => {
-                    const needed = correctCount[ingredient];
-                    const provided = userCount[ingredient] || 0;
-                    
-                    if (provided === 0) {
-                        analysis.missingIngredients.push({ ingredient, needed });
-                    } else if (provided !== needed) {
-                        analysis.ratioErrors.push({ ingredient, needed, provided });
-                    } else {
-                        analysis.correctIngredients.push(ingredient);
-                    }
-                });
-
-                Object.keys(userCount).forEach(ingredient => {
-                    if (!correctCount[ingredient]) {
-                        analysis.extraIngredients.push(ingredient);
-                    }
-                });
-
-                return analysis;
-            }
-
-            generatePersonalizedHint(analysis, challenge, attemptNumber) {
-                let hint = "";
-                const studentStyle = this.studentProfile.learningStyle;
-
-                if (attemptNumber === 1) {
-                    // First attempt - gentle guidance
-                    if (analysis.missingIngredients.length > 0) {
-                        hint = `I notice you're missing some key ingredients. Think about what the equation tells us: ${challenge.equation}. `;
-                        if (studentStyle === 'visual') {
-                            hint += "Try visualizing each side of the equation - what molecules do you see?";
-                        } else if (studentStyle === 'analytical') {
-                            hint += "Count the atoms on each side - they must balance!";
-                        }
-                    }
-                } else if (attemptNumber === 2) {
-                    // Second attempt - more specific
-                    if (analysis.ratioErrors.length > 0) {
-                        const error = analysis.ratioErrors[0];
-                        hint = `You have ${error.provided} ${error.ingredient}, but you need ${error.needed}. `;
-                        hint += "In chemistry, the numbers in front of molecules (coefficients) tell us the exact ratios needed!";
-                    }
-                } else {
-                    // Third+ attempt - very specific help
-                    hint = "Let me break this down step by step:\n";
-                    if (analysis.missingIngredients.length > 0) {
-                        hint += `Missing: ${analysis.missingIngredients.map(m => `${m.needed} ${m.ingredient}`).join(', ')}\n`;
-                    }
-                    if (analysis.extraIngredients.length > 0) {
-                        hint += `Remove: ${analysis.extraIngredients.join(', ')}\n`;
-                    }
-                    hint += "The equation shows you exactly what you need!";
-                }
-
-                this.conversationHistory.push({ type: 'hint', content: hint, attempt: attemptNumber });
-                return hint;
-            }
-
-            adaptToStudent(success, timeSpent, mistakeType) {
-                // Learn from student behavior
-                if (success && timeSpent < 30) {
-                    this.studentProfile.strengths.push('quick_learner');
-                } else if (!success && mistakeType === 'ratio') {
-                    this.studentProfile.weaknesses.push('stoichiometry');
-                    this.studentProfile.learningStyle = 'analytical'; // Needs more structured approach
-                }
-            }
-
-            provideEncouragement(consecutiveFailures) {
-                const encouragements = [
-                    "Every great chemist started as a beginner! You're learning with each attempt.",
-                    "Mistakes are how we discover new things in science. Keep experimenting!",
-                    "Even Nobel Prize winners had to practice their chemistry. You're on the right path!",
-                    "Chemistry is like solving puzzles - each piece teaches you something new.",
-                    "Remember, understanding WHY something works is more important than getting it right immediately."
-                ];
-                
-                return encouragements[Math.min(consecutiveFailures, encouragements.length - 1)];
-            }
-
-            explainReaction(challenge) {
-                const reactionKey = Object.keys(this.knowledge.reactions).find(key => 
-                    challenge.equation.includes(key.split(' + ')[0]) && challenge.equation.includes(key.split(' + ')[1])
-                );
-                
-                if (reactionKey) {
-                    const reaction = this.knowledge.reactions[reactionKey];
-                    return `🔬 Reaction Explanation: ${reaction.explanation}\n💡 Real World: ${reaction.realWorld}\n⚖️ Balancing Tip: ${reaction.balancing}`;
-                }
-                
-                return "This is a fascinating chemical reaction! Each ingredient plays a specific role in creating the final product.";
-            }
-        }
-
-        // Initialize the agentic AI
-        const aiGuide = new AgenticAIGuide();
-        let attemptCounter = 0;
-        let consecutiveFailures = 0;
-
+        // AI Guide system
         function provideAIHint() {
             const guide = document.getElementById('guide-message');
             const contents = gameState.cauldronContents;
@@ -1365,8 +1220,8 @@
             } else if (contents.length === solution.length) {
                 guide.textContent = "Perfect amount! Try brewing your potion now.";
             } else {
-            guide.textContent = "That might be too much. Consider removing some ingredients.";
-        }
+                guide.textContent = "That might be too much. Consider removing some ingredients.";
+            }
         }
         
         // Provide detailed hint after failure
@@ -1478,6 +1333,7 @@
         // Event Listeners
         document.getElementById('brew-button').addEventListener('click', brewPotion);
         document.getElementById('cauldron').addEventListener('dblclick', clearCauldron);
+        document.getElementById('reset-button').addEventListener('click', clearCauldron);
         
         // Initialize everything when page loads
         document.addEventListener('DOMContentLoaded', () => {
